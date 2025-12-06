@@ -62,7 +62,10 @@ namespace cs_fretamento
         {
             veiculos.Push(veiculo);
         }
-
+        public void CadastrarDestino(Aeroporto aeroporto)
+        {
+            destinos.Add(aeroporto);
+        }
         public void CadastrarGaragem(Aeroporto aeroporto, Garagem garagem)
         {
             aeroporto.Garagens.Add(garagem);
