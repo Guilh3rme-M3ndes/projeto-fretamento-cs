@@ -86,7 +86,7 @@ namespace cs_fretamento
                         //CountPassageiros();
                         break;
                     default:
-                        Utils.MensagemErro("Digite um número de 0-9!");
+                        Utils.MensagemErro("Digite um número de 0-10!");
                         break;
                 }
                 
