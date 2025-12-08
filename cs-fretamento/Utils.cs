@@ -44,7 +44,7 @@ namespace cs_fretamento
         {
             Console.Clear();
             Console.WriteLine(new string('=', 70));
-            Console.WriteLine($" GERENCIAMENTO DE PROJETOS - {titulo}");
+            Console.WriteLine($" FRETAMENTO - {titulo}");
             Console.WriteLine(new string('=', 70));
         }
 

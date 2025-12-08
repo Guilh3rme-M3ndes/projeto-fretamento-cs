@@ -23,6 +23,11 @@ namespace cs_fretamento
             Garagem defaultGaragem = new Garagem($"{Nome} 1", 10);
             garagens = new List<Garagem>([defaultGaragem]);
         }
+        public Aeroporto()
+        {
+            this.id = -1;
+            this.nome = "destino vazio";
+        }
 
         public void AdicionarGaragem(Garagem garagem)
         {
