@@ -26,8 +26,8 @@ namespace cs_fretamento
     internal class Program
     {
         public static Fretadora fretadora = SeedFretadora();
-        public static Aeroporto destino = fretadora.Destinos[0];
-        public static Aeroporto origem = fretadora.Destinos[1];
+        public static Aeroporto destinoAtual;
+        public static Aeroporto origemAtual;
         static void Main(string[] args)
         {
             int seletor = -1;
@@ -65,13 +65,13 @@ namespace cs_fretamento
                         CadastrarGaragem();
                         break;
                     case 4:
-                        //IniciarJornada();
+                        IniciarJornada();
                         break;
                     case 5:
-                        //EncerrarJornada();
+                        EncerrarJornada();
                         break;
                     case 6:
-                        //LiberarViagem();
+                        LiberarViagem();
                         break;
                     case 7:
                         //ListarVeiculos();
@@ -96,7 +96,7 @@ namespace cs_fretamento
         {
             string nome = "GuiVen";
             Aeroporto destino1 = new Aeroporto(1, "Congonhas");
-            Aeroporto destino2 = new Aeroporto(2, "Congonhas");
+            Aeroporto destino2 = new Aeroporto(2, "Guarulhos");
             List<Aeroporto> destinos = new List<Aeroporto>([destino1, destino2]);
             Stack<Veiculo> veiculos = new Stack<Veiculo>();
             for (int ii = 0; ii < 8; ii++)
@@ -110,71 +110,167 @@ namespace cs_fretamento
         static void CadastrarVeiculo()
         {
             Utils.Titulo("CADASTRAR VEICULO");
-            Console.Write("Informe a Identificação do veículo: ");
-            string id = Console.ReadLine();
-            Veiculo veiculoPesquisado = fretadora.Veiculos.FirstOrDefault(v => v.Id == id);
-            if (veiculoPesquisado == null)
+            if (!fretadora.EmJornada)
             {
-                Console.Write("Informe a capacidade: ");
-                int capacidade = Utils.lerInt(Console.ReadLine(), 1, "Capacidade inválida! Digite a capacidade: ");
-                Veiculo veiculo = new Veiculo(id, capacidade);
-                fretadora.CadastrarVeiculo(veiculo);
-                Utils.MensagemSucesso("Veiculo cadastrado com sucesso");
+                Console.Write("Informe a Identificação do veículo: ");
+                string id = Console.ReadLine();
+                Veiculo veiculoPesquisado = fretadora.Veiculos.FirstOrDefault(v => v.Id == id);
+                if (veiculoPesquisado == null)
+                {
+                    Console.Write("Informe a capacidade: ");
+                    int capacidade = Utils.lerInt(Console.ReadLine(), 1, "Capacidade inválida! Digite a capacidade: ");
+                    Veiculo veiculo = new Veiculo(id, capacidade);
+                    fretadora.CadastrarVeiculo(veiculo);
+                    Utils.MensagemSucesso("Veiculo cadastrado com sucesso");
+                }
+                else
+                {
+                    Utils.MensagemErro("Veiculo já cadastrado!");
+                }
             }
             else
-            {
-                Utils.MensagemErro("Veiculo já cadastrado!");
-            }
+                Utils.MensagemErro("Cadastro bloqueado, jornada diaria em andamento.");
 
         }
         static void CadastrarDestino()
         {
             Utils.Titulo("CADASTRAR DESTINO");
-            Console.Write("Informe o nome do destino: ");
-            string nome = Console.ReadLine();
-            Aeroporto aeroPesquisado = fretadora.Destinos.FirstOrDefault(a => a.Nome == nome);
-            if (aeroPesquisado == null)
-            { 
-                Aeroporto destino = new Aeroporto(fretadora.Destinos.Count, nome);
-                fretadora.Destinos.Add(destino);
-                fretadora.CadastrarDestino(destino);
-                Utils.MensagemSucesso($"Destino cadastrado com sucesso (garagem inicial: {destino.Garagens[0].Id}");
+            if (!fretadora.EmJornada) 
+            {
+                Console.Write("Informe o nome do destino: ");
+                string nome = Console.ReadLine();
+                Aeroporto aeroPesquisado = fretadora.Destinos.FirstOrDefault(a => a.Nome == nome);
+                if (aeroPesquisado == null)
+                {
+                    Aeroporto destino = new Aeroporto(fretadora.Destinos.Count, nome);
+                    fretadora.CadastrarDestino(destino);
+                    Utils.MensagemSucesso($"Destino cadastrado com sucesso (garagem inicial: {destino.Garagens[0].Id}");
+                }
+                else
+                {
+                    Utils.MensagemErro("Destino já cadastrado!");
+                }
             }
             else
-            {
-                Utils.MensagemErro("Destino já cadastrado!");
-            }
+                Utils.MensagemErro("Cadastro bloqueado, jornada diaria em andamento.");
 
         }
         static void CadastrarGaragem()
         {
             Utils.Titulo("CADASTRAR GARAGEM");
-            Console.Write("Informe o destino: ");
-            string nomeDestino = Console.ReadLine();
-            Aeroporto destinoPesquisado = fretadora.Destinos.Find(d => d.Nome == nomeDestino);
-            if (destinoPesquisado != null)
+            if (!fretadora.EmJornada)
             {
-                Console.Write(" Informe a identificação da garagem: ");
-                string nomeGaragem = Console.ReadLine();
-                Garagem garagemPesquisada = destinoPesquisado.Garagens.Find(g => g.Id == nomeGaragem);
-                if (garagemPesquisada == null)
+                Console.Write("Informe o destino: ");
+                string nomeDestino = Console.ReadLine();
+                Aeroporto destinoPesquisado = fretadora.Destinos.Find(d => d.Nome == nomeDestino);
+                if (destinoPesquisado != null)
                 {
-                    Console.Write("Informe a capacidade: ");
-                    int capacidade = Utils.lerInt(Console.ReadLine(), 1, "Capacidade inválida. Informe a capacidade: ");
-                    Garagem garagem = new Garagem(nomeGaragem, capacidade);
-                    fretadora.CadastrarGaragem(destinoPesquisado, garagem);
-                    Utils.MensagemSucesso(" Garagem cadastrada! ");
+                    Console.Write(" Informe a identificação da garagem: ");
+                    string nomeGaragem = Console.ReadLine();
+                    Garagem garagemPesquisada = destinoPesquisado.Garagens.Find(g => g.Id == nomeGaragem);
+                    if (garagemPesquisada == null)
+                    {
+                        Console.Write("Informe a capacidade: ");
+                        int capacidade = Utils.lerInt(Console.ReadLine(), 1, "Capacidade inválida. Informe a capacidade: ");
+                        Garagem garagem = new Garagem(nomeGaragem, capacidade);
+                        fretadora.CadastrarGaragem(destinoPesquisado, garagem);
+                        Utils.MensagemSucesso(" Garagem cadastrada! ");
+                    }
+                    else
+                    {
+                        Utils.MensagemErro("Garagem já existe");
+                    }
                 }
                 else
                 {
-                    Utils.MensagemErro("Garagem já existe");
+                    Utils.MensagemErro("Destino não encontrado");
                 }
             }
             else
-            {
-                Utils.MensagemErro("Destino não encontrado");
-            }
+                Utils.MensagemErro("Cadastro bloqueado, jornada diaria em andamento.");
 
+        }
+        static void IniciarJornada()
+        {
+            Utils.Titulo("INICIAR JORNADA");
+            if (fretadora.EmJornada)
+            {
+                Utils.MensagemErro("É necessário finalizar a jornada atual!");
+            }
+            else
+            {
+                Console.WriteLine("Destinos disponíveis: ");
+                fretadora.Destinos.ForEach(destino => { Console.WriteLine(destino.Nome); });
+                Console.WriteLine(new string('-', 15));
+                Console.Write("Informe a origem: ");
+                string nomeOrigem = Console.ReadLine();
+                if (fretadora.Destinos.Any(d => d.Nome == nomeOrigem))
+                {
+                    Aeroporto origem = fretadora.getDestino(nomeOrigem);
+                    Console.Write("Informe o destino: ");
+                    string nomeDestino = Console.ReadLine();
+                    if (nomeDestino != nomeOrigem && fretadora.Destinos.Any(d => d.Nome == nomeDestino))
+                    {
+                        Aeroporto destino = fretadora.getDestino(nomeDestino);
+                        destinoAtual = destino;
+                        origemAtual = origem;
+                        fretadora.IniciarJornada(destino, origem);
+                        Utils.MensagemSucesso($"Jornada iniciada!: de {nomeOrigem} à {nomeDestino}");
+                    }
+                    else
+                        Utils.MensagemErro("Nenhum destino encontrado");
+                }
+                else
+                    Utils.MensagemErro("Nenhum destino encontrado.");
+            }
+        }
+        static void EncerrarJornada()
+        {
+            Utils.Titulo("FINALIZAR JORNADA");
+            if (fretadora.EmJornada)
+            {
+                fretadora.EncerrarJornada(origemAtual, destinoAtual);
+                destinoAtual = new Aeroporto();
+                origemAtual = new Aeroporto();
+                Utils.MensagemSucesso("Jornada encerrada!");
+            }
+            else
+                Utils.MensagemErro("Nenhuma jornada para finalizar!");
+        }
+        static void LiberarViagem()
+        {
+            Utils.Titulo("LIBERAR VIAGEM");
+            Console.Write("Informe a origem: ");
+            string nomeOrigem = Console.ReadLine();
+            Aeroporto origem = fretadora.getDestino(nomeOrigem);
+            if (origem != null)
+            {
+                int qtVeiculosOrigem = 0;
+                origem.Garagens.ForEach(g => { qtVeiculosOrigem += g.Veiculos.Count; });
+                if (qtVeiculosOrigem > 0)
+                {
+                    Console.Write("Informe o destino: ");
+                    string nomeDestino = Console.ReadLine();
+                    Aeroporto destino = fretadora.getDestino(nomeDestino);
+                    if (destino != null)
+                    {
+                        bool temVaga = destino.Garagens.Any(g => g.Veiculos.Count < g.Capacidade);
+                        if (temVaga)
+                        {
+                            fretadora.LiberarViagem(origem, destino);
+                            Utils.MensagemSucesso("Viagem liberada com sucesso!");
+                        }
+                        else
+                            Utils.MensagemErro("Todas as garagens do destino estão cheias");
+                    }
+                    else
+                        Utils.MensagemErro("Destino não encontrado");
+                }
+                else
+                    Utils.MensagemErro("Nenhum veículo disponível");
+            }
+            else
+                Utils.MensagemErro("Local de origem não encontrado!");
         }
     }
 
