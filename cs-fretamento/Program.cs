@@ -74,7 +74,7 @@ namespace cs_fretamento
                         LiberarViagem();
                         break;
                     case 7:
-                        //ListarVeiculos();
+                        ListarVeiculos();
                         break;
                     case 8:
                         //CountViagens();
@@ -271,6 +271,32 @@ namespace cs_fretamento
             }
             else
                 Utils.MensagemErro("Local de origem não encontrado!");
+        }
+        static void ListarVeiculos()
+        {
+            Utils.Titulo("LISTAR VEICULOS");
+            Console.Write("Informe o destino: ");
+            string nomeDestino = Console.ReadLine();
+            Aeroporto destino = fretadora.getDestino(nomeDestino);
+            if (destino != null)
+            {
+                Console.WriteLine("Garagens do destino: ");
+                destino.Garagens.ForEach(g => Console.WriteLine(g.Id));
+                Console.WriteLine(new string('-', 15));
+                Console.Write("Informe a garagem: ");
+                string idGaragem = Console.ReadLine();
+                Garagem garagem = destino.Garagens.Find(g => g.Id == idGaragem);
+                if (garagem != null)
+                {
+                    Console.WriteLine(garagem.Veiculos.Count > 0 ? garagem.ToString() : "Nenhum veículo na garagem");
+                    Utils.MensagemSucesso("Fim da listagem");
+                }
+                else
+                    Utils.MensagemErro("Garagem não encontrada");
+
+            }
+            else
+                Utils.MensagemErro("Destino não encontrado");
         }
     }
 

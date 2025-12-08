@@ -30,7 +30,7 @@ namespace cs_fretamento
             {
                 saida += v.ToString() + new string('-', 15) + "\n";
             }
-            return saida;
+            return saida + $"Total de veiculos: {Veiculos.Count}";
         }
         public bool Estacionar(Garagem origem)
         {
