@@ -23,5 +23,12 @@ namespace cs_fretamento
             this.origem = origem;
             this.qtdPassageiros = qtdPassageiros;
         }
+
+        public override string ToString()
+        {
+            return $"Trajeto: {origem.Nome} à {destino.Nome}\n" +
+                $"Quantidade de passageiros: {qtdPassageiros}\n" +
+                $"{new string('-', 30)}\n";
+        }
     }
 }
