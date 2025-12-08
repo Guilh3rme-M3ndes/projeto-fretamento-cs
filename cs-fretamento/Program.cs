@@ -201,7 +201,7 @@ namespace cs_fretamento
             {
                 Console.WriteLine("Destinos disponíveis: ");
                 fretadora.Destinos.ForEach(destino => { Console.WriteLine(destino.Nome); });
-                Console.WriteLine(new string('-', 15));
+                Console.WriteLine(new string('-', 30));
                 Console.Write("Informe a origem: ");
                 string nomeOrigem = Console.ReadLine();
                 if (fretadora.Destinos.Any(d => d.Nome == nomeOrigem))
@@ -282,7 +282,7 @@ namespace cs_fretamento
             {
                 Console.WriteLine("Garagens do destino: ");
                 destino.Garagens.ForEach(g => Console.WriteLine(g.Id));
-                Console.WriteLine(new string('-', 15));
+                Console.WriteLine(new string('-', 30));
                 Console.Write("Informe a garagem: ");
                 string idGaragem = Console.ReadLine();
                 Garagem garagem = destino.Garagens.Find(g => g.Id == idGaragem);

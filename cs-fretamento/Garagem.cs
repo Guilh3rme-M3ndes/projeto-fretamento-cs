@@ -25,10 +25,10 @@ namespace cs_fretamento
 
         public override string ToString()
         {
-            string saida = new string('-', 15) + "\n";
+            string saida = new string('-', 30) + "\n";
             foreach(Veiculo v in veiculos)
             {
-                saida += v.ToString() + new string('-', 15) + "\n";
+                saida += v.ToString() + new string('-', 30) + "\n";
             }
             return saida + $"Total de veiculos: {Veiculos.Count}";
         }
