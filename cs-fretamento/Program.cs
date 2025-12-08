@@ -77,10 +77,10 @@ namespace cs_fretamento
                         ListarVeiculos();
                         break;
                     case 8:
-                        //CountViagens();
+                        CountViagens();
                         break;
                     case 9:
-                        //ListarViagens();
+                        ListarViagens();
                         break;
                     case 10:
                         //CountPassageiros();
@@ -297,6 +297,53 @@ namespace cs_fretamento
             }
             else
                 Utils.MensagemErro("Destino não encontrado");
+        }
+        static void CountViagens()
+        {
+            Utils.Titulo("CONTAGEM DE VIAGENS");
+            Console.Write("Informe a origem: ");
+            string nomeOrigem = Console.ReadLine();
+            Aeroporto origem = fretadora.getDestino(nomeOrigem);
+            if (origem != null)
+            {
+                Console.Write("Informe o destino: ");
+                string nomeDestino = Console.ReadLine();
+                Aeroporto destino = fretadora.getDestino(nomeDestino);
+                if (destino != null)
+                {
+                    int qtdViagens = fretadora.CountViagens(origem, destino);
+                    Utils.MensagemSucesso(qtdViagens > 0 ? $"{qtdViagens} viagens realizadas de {origem.Nome} à {destino.Nome}" : $"Nenhuma viagem registrada de {origem.Nome} à {destino.Nome}");
+                }
+                else
+                    Utils.MensagemErro("Destino não encontrado");
+            }
+            else
+                Utils.MensagemErro("Origem não encontrada");
+        }
+
+        static void ListarViagens()
+        {
+            Utils.Titulo("LISTAGEM DE VIAGENS");
+            Console.Write("Informe a origem: ");
+            string nomeOrigem = Console.ReadLine();
+            Aeroporto origem = fretadora.getDestino(nomeOrigem);
+            if (origem != null)
+            {
+                Console.Write("Informe o destino: ");
+                string nomeDestino = Console.ReadLine();
+                Aeroporto destino = fretadora.getDestino(nomeDestino);
+                if (destino != null)
+                {
+                    int qtdViagens = fretadora.CountViagens(origem, destino);
+                    string listagem = "";
+                    fretadora.Viagens.ForEach(v => listagem += v.ToString());
+                    Utils.MensagemSucesso(qtdViagens > 0 ? $"{listagem}" : $"Nenhuma viagem registrada de {origem.Nome} à {destino.Nome}");
+                }
+                else
+                    Utils.MensagemErro("Destino não encontrado");
+            }
+            else
+                Utils.MensagemErro("Origem não encontrada");
         }
     }
 

@@ -101,5 +101,11 @@ namespace cs_fretamento
         {
             return Destinos.Find(d => d.Nome == nomeDestino);
         }
+
+        public int CountViagens(Aeroporto origem, Aeroporto destino)
+        {
+            List<Viagem> viagens = Viagens.FindAll(v => v.Origem.Nome == origem.Nome && v.Destino.Nome == destino.Nome);
+            return viagens.Count();
+        }
     }
 }
