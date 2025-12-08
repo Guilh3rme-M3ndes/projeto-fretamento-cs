@@ -83,7 +83,7 @@ namespace cs_fretamento
                         ListarViagens();
                         break;
                     case 10:
-                        //CountPassageiros();
+                        CountPassageiros();
                         break;
                     default:
                         Utils.MensagemErro("Digite um número de 0-10!");
@@ -336,8 +336,43 @@ namespace cs_fretamento
                 {
                     int qtdViagens = fretadora.CountViagens(origem, destino);
                     string listagem = "";
-                    fretadora.Viagens.ForEach(v => listagem += v.ToString());
+                    fretadora.Viagens.ForEach(v => 
+                    { 
+                        if (v.Destino.Nome == nomeDestino && v.Origem.Nome == nomeOrigem) 
+                        { 
+                            listagem += v.ToString(); 
+                        } 
+                    });
                     Utils.MensagemSucesso(qtdViagens > 0 ? $"{listagem}" : $"Nenhuma viagem registrada de {origem.Nome} à {destino.Nome}");
+                }
+                else
+                    Utils.MensagemErro("Destino não encontrado");
+            }
+            else
+                Utils.MensagemErro("Origem não encontrada");
+        }
+        static void CountPassageiros()
+        {
+            Utils.Titulo("CONTAGEM DE PASSAGEIROS");
+            Console.Write("Informe a origem: ");
+            string nomeOrigem = Console.ReadLine();
+            Aeroporto origem = fretadora.getDestino(nomeOrigem);
+            if (origem != null)
+            {
+                Console.Write("Informe o destino: ");
+                string nomeDestino = Console.ReadLine();
+                Aeroporto destino = fretadora.getDestino(nomeDestino);
+                if (destino != null)
+                {
+                    int qtdPassageiros = 0;
+                    fretadora.Viagens.ForEach(v =>
+                    {
+                        if (v.Destino.Nome == nomeDestino && v.Origem.Nome == nomeOrigem)
+                        {
+                            qtdPassageiros += v.QtdPassageiros;
+                        }
+                    });
+                    Utils.MensagemSucesso(qtdPassageiros > 0 ? $"{qtdPassageiros} transportados de {origem.Nome} à {destino.Nome}" : $"Nenhuma passageiro transportado de {origem.Nome} à {destino.Nome}");
                 }
                 else
                     Utils.MensagemErro("Destino não encontrado");
